@@ -54,7 +54,7 @@ namespace test1.APIController
         //   * زيادة عداد النقرات (Hit) للإعلان
         //   * التحقق من أن الإعلان متاح وصالح
         // - لا ترجع أي بيانات (void)
-        [HttpPost("Hit/{id}")]
+        [HttpPatch("Hit/{id}")]
         [AllowAnonymous]
         public void Hit(int id)
         {

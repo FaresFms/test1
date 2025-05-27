@@ -61,7 +61,7 @@ namespace test1.APIController
         // - حالة الفشل: 
         //   * 400 إذا كانت البيانات فارغة
         //   * 500 إذا حدث خطأ داخلي
-        [HttpPost("Edit")]
+        [HttpPut("Edit")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles = "Admin")]
         public async Task<ApiResponse> Edit(
           [FromForm] TbSetting? setting,

@@ -73,7 +73,7 @@ namespace test1
             builder.Services.AddScoped<IAd, ClsAd>();
             builder.Services.AddScoped<Isettings, ClsSettings>();
             builder.Services.AddScoped<IReview, ClsReview>();
-
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
             builder.Services.AddAuthorization();
             // Add services to the container.
             builder.Services.AddControllers();

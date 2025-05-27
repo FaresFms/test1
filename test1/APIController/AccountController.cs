@@ -189,7 +189,7 @@ namespace test1.APIController
         // - يحافظ على الصورة القديمة إذا لم يتم رفع صورة جديدة
         // - يقوم بتسجيل تاريخ التحديث
         // - يحتاج لمصادقة بواسطة JWT
-        [HttpPost("EditProfile")]
+        [HttpPatch("EditProfile")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ApiResponse> EditProfile([FromForm] UserEditModel Auser, [FromForm] List<IFormFile>? File1)
         {

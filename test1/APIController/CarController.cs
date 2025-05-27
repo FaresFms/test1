@@ -40,7 +40,7 @@ namespace test1.APIController
         // - حالة الفشل: حذف الصور المرفوعة مع رسالة خطأ
 
 
-        [HttpPost("SaveEditCar/{Id}")]
+        [HttpPatch("SaveEditCar/{Id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ApiResponse> SaveEditCar([FromRoute]int Id, [FromForm] TbCar? car, [FromForm] List<IFormFile>? File1, [FromForm] List<IFormFile>? File2, [FromForm] List<IFormFile>? File3)
         {
@@ -239,7 +239,7 @@ namespace test1.APIController
         // - حالة النجاح: 200 مع رسالة "done"
         // - حالة الفشل: رسالة خطأ (400 إذا لم يكن مالك السيارة)
 
-        [HttpPost("Delete/{Id}")]
+        [HttpDelete("Delete/{Id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ApiResponse DeleteCar(int Id)
         {
@@ -505,7 +505,7 @@ namespace test1.APIController
         // - التحقق من ملكية المستخدم للسيارة
         // - حالة النجاح: 200 مع رسالة تأكيد
 
-        [HttpPost("Sold/{Id}")]
+        [HttpPatch("Sold/{Id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ApiResponse Sold(int id)
         {

@@ -1,4 +1,5 @@
-﻿using FuzzySharp;
+﻿using AutoMapper;
+using FuzzySharp;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,10 +27,11 @@ namespace test1.Bl
     public class ClsCars : ICar
     {
         RentCarContext context;
-       
-        public ClsCars(RentCarContext _context,IReview review)
+        IMapper mapper;
+        public ClsCars(RentCarContext _context,IReview review,IMapper _Mapper)
         {
             context = _context;
+            mapper = _Mapper;
            
         }
         public TbCar ShowCar(int? Id)  // جلب سيارة واحدة حسب المعرف (تتجاهل المحذوفة)
@@ -228,103 +230,154 @@ namespace test1.Bl
             }
         }
         // جلب 8 سيارات للعرض مع عدد التعليقات
+        /*        public List<PageCarModel> ShowEightCars(int Counter, string? userId, int Sold)
+                {
+                    try
+                    {
+
+                        List<PageCarModel> carsWithReviews = new List<PageCarModel>();
+
+
+                        if (userId.IsNullOrEmpty())
+                        {
+                            carsWithReviews = context.TbCars
+            .Where(a => a.IsDeleted!=true && a.Sold!=1 ).
+           Select(t => new PageCarModel
+           {
+               Id = t.Id,
+               Brand = t.Brand,
+               Model = t.Model,
+               Transmission = t.Transmission,
+               Status = t.Status,
+               City = t.City,
+               Color = t.Color,
+               Engine = t.Engine,
+               CreateDate = t.CreateDate,
+               KiloMetrage = t.KiloMetrage,
+               Img1 = t.Img1,
+               Comments = context.TbReviews.Count(r => r.CarId == t.Id),
+               Price = t.Price,
+               UserId = t.UserId,
+               Fuel = t.Fuel,
+               Year = t.Year,
+               UpdateDate = t.UpdateDate,
+
+           }).Skip((Counter - 1) * 8)
+                            .Take(8).ToList();
+
+
+                        }
+                        else
+                        {
+                            if (Sold == 1)
+                            {
+
+
+                                carsWithReviews = context.TbCars
+                  .Where(t => t.IsDeleted != true && t.UserId == userId && t.Sold == 1)
+                  .Select(t => new PageCarModel
+                  {
+                      Id = t.Id,
+                      Brand = t.Brand,
+                      Model = t.Model,
+                      Transmission = t.Transmission,
+                      Status = t.Status,
+                      City = t.City,
+                      Color = t.Color,
+                      Engine = t.Engine,
+                      CreateDate = t.CreateDate,
+                      KiloMetrage = t.KiloMetrage,
+                      Img1 = t.Img1,
+                      Comments = context.TbReviews.Count(r => r.CarId == t.Id),
+                      Price=t.Price,
+                      UserId = t.UserId,
+                      Fuel = t.Fuel,
+                      Year = t.Year,
+                      UpdateDate = t.UpdateDate,
+                  }).Skip((Counter - 1) * 8)
+                                .Take(8).ToList();
+                            }
+                            else
+                            {
+
+                                carsWithReviews = context.TbCars
+                  .Where(t => t.IsDeleted != true && t.UserId == userId && t.Sold == 0)
+                  .Select(t => new PageCarModel
+                  {
+                      Id = t.Id,
+                      Brand = t.Brand,
+                      Model = t.Model,
+                      Transmission = t.Transmission,
+                      Status = t.Status,
+                      City = t.City,
+                      Color = t.Color,
+                      Engine = t.Engine,
+                      CreateDate = t.CreateDate,
+                      KiloMetrage = t.KiloMetrage,
+                      Img1 = t.Img1,
+                      Comments = context.TbReviews.Count(r => r.CarId == t.Id),
+                      Price = t.Price,
+                      UserId = t.UserId,
+                      Fuel = t.Fuel,
+                      Year = t.Year,
+                      UpdateDate = t.UpdateDate,
+                  }).Skip((Counter - 1) * 8)
+                                .Take(8).ToList();
+                            }
+                        }
+
+                        return carsWithReviews;
+                    }
+                    catch
+                    {
+                        return new List<PageCarModel>();
+                    }
+                }
+        */
         public List<PageCarModel> ShowEightCars(int Counter, string? userId, int Sold)
         {
             try
             {
-               
-                List<PageCarModel> carsWithReviews = new List<PageCarModel>();
-
+                List<TbCar> cars;
 
                 if (userId.IsNullOrEmpty())
                 {
-                    carsWithReviews = context.TbCars
-    .Where(a => a.IsDeleted!=true && a.Sold!=1 ).
-   Select(t => new PageCarModel
-   {
-       Id = t.Id,
-       Brand = t.Brand,
-       Model = t.Model,
-       Transmission = t.Transmission,
-       Status = t.Status,
-       City = t.City,
-       Color = t.Color,
-       Engine = t.Engine,
-       CreateDate = t.CreateDate,
-       KiloMetrage = t.KiloMetrage,
-       Img1 = t.Img1,
-       Comments = context.TbReviews.Count(r => r.CarId == t.Id),
-       Price = t.Price,
-       UserId = t.UserId,
-       Fuel = t.Fuel,
-       Year = t.Year,
-       UpdateDate = t.UpdateDate,
-
-   }).Skip((Counter - 1) * 8)
-                    .Take(8).ToList();
-       
-
+                    cars = context.TbCars
+                        .Where(a => a.IsDeleted != true && a.Sold != 1)
+                        .Skip((Counter - 1) * 8)
+                        .Take(8)
+                        .ToList();
                 }
                 else
                 {
                     if (Sold == 1)
                     {
-
-
-                        carsWithReviews = context.TbCars
-          .Where(t => t.IsDeleted != true && t.UserId == userId && t.Sold == 1)
-          .Select(t => new PageCarModel
-          {
-              Id = t.Id,
-              Brand = t.Brand,
-              Model = t.Model,
-              Transmission = t.Transmission,
-              Status = t.Status,
-              City = t.City,
-              Color = t.Color,
-              Engine = t.Engine,
-              CreateDate = t.CreateDate,
-              KiloMetrage = t.KiloMetrage,
-              Img1 = t.Img1,
-              Comments = context.TbReviews.Count(r => r.CarId == t.Id),
-              Price=t.Price,
-              UserId = t.UserId,
-              Fuel = t.Fuel,
-              Year = t.Year,
-              UpdateDate = t.UpdateDate,
-          }).Skip((Counter - 1) * 8)
-                        .Take(8).ToList();
+                        cars = context.TbCars
+                            .Where(t => t.IsDeleted != true && t.UserId == userId && t.Sold == 1)
+                            .Skip((Counter - 1) * 8)
+                            .Take(8)
+                            .ToList();
                     }
                     else
                     {
-
-                        carsWithReviews = context.TbCars
-          .Where(t => t.IsDeleted != true && t.UserId == userId && t.Sold == 0)
-          .Select(t => new PageCarModel
-          {
-              Id = t.Id,
-              Brand = t.Brand,
-              Model = t.Model,
-              Transmission = t.Transmission,
-              Status = t.Status,
-              City = t.City,
-              Color = t.Color,
-              Engine = t.Engine,
-              CreateDate = t.CreateDate,
-              KiloMetrage = t.KiloMetrage,
-              Img1 = t.Img1,
-              Comments = context.TbReviews.Count(r => r.CarId == t.Id),
-              Price = t.Price,
-              UserId = t.UserId,
-              Fuel = t.Fuel,
-              Year = t.Year,
-              UpdateDate = t.UpdateDate,
-          }).Skip((Counter - 1) * 8)
-                        .Take(8).ToList();
+                        cars = context.TbCars
+                            .Where(t => t.IsDeleted != true && t.UserId == userId && t.Sold == 0)
+                            .Skip((Counter - 1) * 8)
+                            .Take(8)
+                            .ToList();
                     }
                 }
 
-                return carsWithReviews;
+                // عمل المابينغ من TbCar إلى PageCarModel
+                var mappedCars = mapper.Map<List<PageCarModel>>(cars);
+
+                // تعبئة عدد التعليقات بشكل يدوي لأنو AutoMapper ما فيو يعرف يحسبها
+                foreach (var car in mappedCars)
+                {
+                    car.Comments = context.TbReviews.Count(r => r.CarId == car.Id);
+                }
+
+                return mappedCars;
             }
             catch
             {
@@ -434,3 +487,4 @@ namespace test1.Bl
         }
     }
 }
+//comment

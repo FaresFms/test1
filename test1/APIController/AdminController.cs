@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,8 @@ namespace test1.APIController
         RentCarContext Context;
         IAdmin clsAdmin;
         ICar ClsCar;
-        public AdminController(UserManager<ApplicationUser> UserManager, IAd ad, IReview review, IAdmin Cadmin, RentCarContext rentCar, ICar clsCar)
+        IMapper Mapper;
+        public AdminController(UserManager<ApplicationUser> UserManager, IAd ad, IReview review, IAdmin Cadmin, RentCarContext rentCar, ICar clsCar, IMapper _Mapper)
         {
             userManager = UserManager;
             ClsAd = ad;
@@ -31,6 +33,7 @@ namespace test1.APIController
             Context = rentCar;
             clsAdmin = Cadmin;
             ClsCar = clsCar;
+            Mapper = _Mapper;
 
         }
 
@@ -88,7 +91,10 @@ namespace test1.APIController
                 foreach (var user in users)
                 {
                     var roles = await userManager.GetRolesAsync(user);
-                    userRolesViewModel.Add(new UserModel
+                    var userModel = Mapper.Map<UserModel>(user);
+                    userModel.roles = roles;
+                    userRolesViewModel.Add(userModel);
+        /*            userRolesViewModel.Add(new UserModel
                     {
                         Id = user.Id,
                         UserName = user.FullName,
@@ -101,7 +107,7 @@ namespace test1.APIController
                         CreationDate = user.CreationDate,
                         UpdatedDate= user.UpdatedDate,
                         LastVisit = user.LastVisit
-                    });
+                    });*/
                 }
                 response.data = userRolesViewModel;
                 response.status = 200;

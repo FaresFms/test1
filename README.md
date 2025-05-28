@@ -1,4 +1,6 @@
 🚗 Car Sales API System
+
+
 🔧 Technologies:
 ASP.NET Core Web API • Entity Framework Core • SQL Server • ASP.NET Core Identity • JWT • In-Memory Caching
 
